@@ -82,7 +82,7 @@ i.write("""@python generatefiles.pyw > output.txt
 i.close()
 
 i = open("getdayn.py", "w")
-i.write("""
+i.write("""import ensuresyscompiled
 from sys import argv as arg
 import json
 daysf = open("daymap.json", "r")
@@ -95,7 +95,8 @@ days.clear()
 i.close()
 
 i = open("getdaynpy.py", "w")
-i.write("""def getdayn(n, n2):
+i.write("""import ensuresyscompiled;
+def getdayn(n, n2):
     import json
     daysf = open("daymap.json", "r")
     days = json.load(daysf)
@@ -104,9 +105,10 @@ i.write("""def getdayn(n, n2):
     daysf.close()
     days.clear()
 """)
+i.close()
 
 i = open("getday.py", "w")
-i.write("""
+i.write("""import ensuresyscompiled
 from getdaynpy import getdayn as getday
 from sys import argv
 hex = argv[1]
@@ -116,5 +118,15 @@ if len(hex) > 5:
     loopnum = int("0x"+hex[5:len(hex)][::-1], 0)
 print(getday(daynum, loopnum))
 """)
+i.close()
+
+i = open("ensuresyscompiled.py", "w")
+i.write("""
+from os import system
+system("python -m compileall getdayn.py getdaynpy.py getday.py ensuresyscompiled.py")
+""")
+i.close()
+from os import system
+system("python -m compileall getdayn.py getdaynpy.py getday.py ensuresyscompiled.py")
 
 quit(0)
